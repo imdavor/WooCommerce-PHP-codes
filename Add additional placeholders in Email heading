@@ -1,0 +1,20 @@
+//in child-theme functions.php
+
+// Only for woocommerce versions 3.2 + (up to 3.2)
+add_filter( 'woocommerce_email_format_string' , 'filter_email_format_string', 20, 2 );
+function filter_email_format_string( $string, $email ) {
+    // Get the instance of the WC_Order object
+    $order = $email->object;
+
+    // Additional wanted placeholders in the array of find / relace pairs
+    $additional_placeholders = array(
+        '{custom_one}'      => __('my replacement one','woocommerce'),
+        '{shipping_city}'   => $order->get_shipping_city(),
+        '{yudu_pw}'         => $order->get_meta( 'yudu_pw' ), // 
+        '{formated_date}'   => wc_format_datetime( $order->get_date_created(), date('Y') ), <=== HERE it shows only year
+    );
+
+    // return the clean string with new replacements
+    return str_replace( array_keys( $additional_placeholders ), array_values( $additional_placeholders ), $string );
+}
+************************************************************************************************************************
